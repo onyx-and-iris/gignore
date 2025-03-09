@@ -17,8 +17,12 @@ Usage of gignore:
 Flags:
   -dir string
         directory containing .gitignore templates (default "gitignoreio")
+  -l int
+        log level (shorthand) (default 3)
   -list
         list available templates
+  -loglevel int
+        log level (default 3)
   -ls
         list available templates (shorthand)
 
