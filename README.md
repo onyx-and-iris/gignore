@@ -48,10 +48,11 @@ If a template is requested but not found in the custom directory then the gitign
 
 [gitignore.io][gitignoreio] For providing such a useful .gitignore service
 
-[gigo][gigo] For writing the Go client library for gitignore.io
+[mh-cbon][mh-cbon] For writing the [gigo][gigo] client library for gitignore.io
 
 
 [task]: https://taskfile.dev/
 [gitignoreio]: https://www.toptal.com/developers/gitignore
+[mh-cbon]: https://github.com/mh-cbon
 [gigo]: https://github.com/mh-cbon/gigo
 [ignore]: https://github.com/neptship/ignore
