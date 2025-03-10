@@ -18,7 +18,7 @@ type GignoreClient struct {
 
 func New(options ...Option) *GignoreClient {
 	gc := &GignoreClient{
-		registry.NewTemplateRegistry(),
+		registry.New(),
 		filewriter.New()}
 
 	for _, option := range options {

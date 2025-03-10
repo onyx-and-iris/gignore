@@ -15,7 +15,7 @@ type TemplateRegistry struct {
 	Directory string
 }
 
-func NewTemplateRegistry() *TemplateRegistry {
+func New() *TemplateRegistry {
 	return &TemplateRegistry{
 		templates: templates,
 	}
