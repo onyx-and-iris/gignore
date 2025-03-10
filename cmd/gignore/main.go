@@ -50,7 +50,9 @@ func main() {
 	client := gignore.New(gignore.WithTemplateDirectory(templateDir))
 
 	if list {
-		listTemplates(client)
+		if err := listTemplates(client); err != nil {
+			log.Fatalf("failed to list templates: %v", err)
+		}
 		return
 	}
 
@@ -68,12 +70,13 @@ func main() {
 	fmt.Printf("√ created %s .gitignore file\n", args[0])
 }
 
-func listTemplates(client *gignore.GignoreClient) {
+func listTemplates(client *gignore.GignoreClient) error {
 	templates, err := client.List()
 	if err != nil {
-		log.Fatalf("failed to list templates: %v", err)
+		return err
 	}
 	for _, template := range templates {
 		fmt.Println(template)
 	}
+	return nil
 }
