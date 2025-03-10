@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/cuonglm/gogi"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	fmt.Println("Generating gitignore.io templates...")
+	log.Info("Generating gitignore.io templates...")
 
 	gogiClient, _ := gogi.NewHTTPClient()
 
