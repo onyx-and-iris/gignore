@@ -1,3 +1,4 @@
+// Package filewriter provides functionality to write content to a .gitignore file.
 package filewriter
 
 import (
@@ -6,11 +7,14 @@ import (
 	"os"
 )
 
+// FileWriter provides functionality to write content to a .gitignore file.
 type FileWriter struct {
+	targetFileName string
 }
 
+// New creates a new FileWriter with the default target file name.
 func New() *FileWriter {
-	return &FileWriter{}
+	return &FileWriter{".gitignore"}
 }
 
 func (fw *FileWriter) writeContent(content []byte, dst io.Writer) (int64, error) {
@@ -25,7 +29,7 @@ func (fw *FileWriter) writeContent(content []byte, dst io.Writer) (int64, error)
 }
 
 func (fw *FileWriter) Write(content []byte) (int, error) {
-	f, err := os.Create(".gitignore")
+	f, err := os.Create(fw.targetFileName)
 	if err != nil {
 		return 0, err
 	}

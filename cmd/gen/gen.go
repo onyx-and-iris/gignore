@@ -1,3 +1,4 @@
+// Package main generates gitignore.io templates using the gogi library.
 package main
 
 import (

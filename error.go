@@ -1,3 +1,4 @@
+// Package gignore provides functionality for handling template errors and registry operations.
 package gignore
 
 import (

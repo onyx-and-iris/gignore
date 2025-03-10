@@ -1,9 +1,11 @@
 package gignore
 
-type Option func(*GignoreClient)
+// Option is a function that configures a GignoreClient.
+type Option func(*Client)
 
+// WithTemplateDirectory sets the template directory for the GignoreClient.
 func WithTemplateDirectory(directory string) Option {
-	return func(g *GignoreClient) {
-		g.registry.Directory = directory
+	return func(c *Client) {
+		c.registry.Directory = directory
 	}
 }

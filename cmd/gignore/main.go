@@ -1,3 +1,5 @@
+// Package main provides the entry point for the gignore command-line tool,
+// which generates .gitignore files based on specified templates.
 package main
 
 import (
@@ -70,7 +72,7 @@ func main() {
 	fmt.Printf("√ created %s .gitignore file\n", args[0])
 }
 
-func listTemplates(client *gignore.GignoreClient) error {
+func listTemplates(client *gignore.Client) error {
 	templates, err := client.List()
 	if err != nil {
 		return err
