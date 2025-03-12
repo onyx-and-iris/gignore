@@ -44,7 +44,7 @@ Example:
 
 ## Custom Templates
 
-It's possible to add your own custom templates, simply create a directory in `internal/registry/templates`. You'll need to rebuild the project before you can load the new templates.
+It's possible to add your own custom templates, simply create a directory in `internal/registry/templates`. You'll need to [reinstall](https://github.com/onyx-and-iris/gignore?tab=readme-ov-file#install) the project before you can load the new templates.
 
 Then pass the dir name as a flag, for example:
 
@@ -60,7 +60,7 @@ If a template is requested but not found in the custom directory then the gitign
 
 [gitignore.io][gitignoreio] For providing such a useful .gitignore service
 
-[cuonglm][mh-cbon] For writing the [gogi][gogi] client library for gitignore.io
+[cuonglm][cuonglm] For writing the [gogi][gogi] client library for gitignore.io
 
 
 [task]: https://taskfile.dev/
