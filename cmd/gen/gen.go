@@ -20,10 +20,25 @@ func main() {
 		log.Fatal(err)
 	}
 
+	errChan := make(chan error)
+	doneChan := make(chan struct{})
+
 	for _, template := range templates {
-		err := createTemplate(template)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to create template %s: %v\n", template.Name, err)
+		go func() {
+			err := createTemplate(template)
+			if err != nil {
+				errChan <- fmt.Errorf("Failed to create template %s: %v", template.Name, err)
+				return
+			}
+			doneChan <- struct{}{}
+		}()
+	}
+
+	for range templates {
+		select {
+		case err := <-errChan:
+			log.Error(err)
+		case <-doneChan:
 		}
 	}
 }

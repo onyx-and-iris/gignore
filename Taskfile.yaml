@@ -44,7 +44,7 @@ tasks:
   generate:
     desc: Generate the gitignore.io templates
     cmds:
-      - go generate .
+      - go generate ./...
 
   build-windows:
     desc: Build the gignore project for Windows
