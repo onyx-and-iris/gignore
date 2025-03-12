@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:generate go run cmd/gen/gen.go
+//go:generate go run cmd/gen/main.go
 
 // Client is a client for managing .gitignore templates.
 type Client struct {
