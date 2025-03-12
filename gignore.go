@@ -32,7 +32,7 @@ func New(options ...Option) *Client {
 
 // List returns a list of available .gitignore templates.
 func (c *Client) List() ([]string, error) {
-	return c.registry.ListTemplates()
+	return c.registry.List()
 }
 
 // Create generates a .gitignore file from the specified template.
@@ -60,7 +60,7 @@ func (c *Client) Create(template string) error {
 		log.Infof("template '%s' found in default gitignoreio registry", template)
 	}
 
-	content, err := c.registry.GetTemplate(template)
+	content, err := c.registry.Get(template)
 	if err != nil {
 		return err
 	}

@@ -41,8 +41,8 @@ func (t *TemplateRegistry) Contains(name string) (bool, error) {
 	return true, nil
 }
 
-// GetTemplate retrieves the content of the gitignore template with the given name.
-func (t *TemplateRegistry) GetTemplate(name string) ([]byte, error) {
+// Get retrieves the content of the gitignore template with the given name.
+func (t *TemplateRegistry) Get(name string) ([]byte, error) {
 	data, err := fs.ReadFile(t.templates, t.filePath(name))
 	if err != nil {
 		return nil, err
@@ -50,8 +50,8 @@ func (t *TemplateRegistry) GetTemplate(name string) ([]byte, error) {
 	return data, nil
 }
 
-// ListTemplates lists all the gitignore templates in the registry.
-func (t *TemplateRegistry) ListTemplates() ([]string, error) {
+// List lists all the gitignore templates in the registry.
+func (t *TemplateRegistry) List() ([]string, error) {
 	var paths []string
 
 	err := fs.WalkDir(
