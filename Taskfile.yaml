@@ -23,13 +23,6 @@ tasks:
       - task: build-windows
       - task: build-linux
 
-  release:
-    desc: Generate the gitignore.io templates and then build the gignore project for Windows and Linux
-    deps: [generate]
-    cmds:
-      - task: build-windows
-      - task: build-linux
-
   vet:
     desc: Vet the code
     deps: [fmt]

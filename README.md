@@ -7,6 +7,13 @@
 
 ## Install
 
+With Go tools:
+
+```bash
+go generate ./...
+go install ./cmd/gignore
+```
+
 With [Task][task]:
 
 ```bash
