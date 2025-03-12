@@ -64,3 +64,8 @@ tasks:
     desc: Clean the build artifacts
     cmds:
       - '{{.SHELL}} rm -r {{.BIN_DIR}}'
+
+  prune:
+    desc: Empty the gitignoreio template registry
+    cmds:
+      - '{{.SHELL}} rm internal/registry/templates/gitignoreio/*.gitignore'

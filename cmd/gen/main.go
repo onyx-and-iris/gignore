@@ -21,7 +21,6 @@ func main() {
 	}
 
 	errChan := make(chan error)
-	doneChan := make(chan struct{})
 
 	for _, template := range templates {
 		go func() {
@@ -30,15 +29,13 @@ func main() {
 				errChan <- fmt.Errorf("Failed to create template %s: %v", template.Name, err)
 				return
 			}
-			doneChan <- struct{}{}
+			errChan <- nil
 		}()
 	}
 
 	for range templates {
-		select {
-		case err := <-errChan:
+		if err := <-errChan; err != nil {
 			log.Error(err)
-		case <-doneChan:
 		}
 	}
 }
