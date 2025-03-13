@@ -4,7 +4,7 @@ import "os"
 
 func getEnv(key, defaultValue string) string {
 	value := os.Getenv(key)
-	if len(value) == 0 {
+	if value == "" {
 		return defaultValue
 	}
 	return value
