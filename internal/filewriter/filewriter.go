@@ -29,14 +29,14 @@ func (fw *FileWriter) writeContent(content []byte, dst io.Writer) (int64, error)
 }
 
 func (fw *FileWriter) Write(content []byte) (int, error) {
-	f, err := os.Create(fw.targetFileName)
+	f, err := os.OpenFile(fw.targetFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o600)
 	if err != nil {
 		return 0, err
 	}
 	defer f.Close()
 
-	const header = `# Auto-generated .gitignore by gignore: github.com/onyx-and-iris/gignore`
-	const footer = `# End of gignore: github.com/onyx-and-iris/gignore`
+	const header = "# Auto-generated .gitignore by gignore: github.com/onyx-and-iris/gignore\n"
+	const footer = "\n# End of gignore: github.com/onyx-and-iris/gignore\n"
 
 	var sz int64
 	n, err := fw.writeContent([]byte(header), f)
