@@ -16,14 +16,14 @@ func main() {
 		w := flag.CommandLine.Output()
 
 		fmt.Fprint(w, "Usage of gignore:\n")
-		fmt.Fprintf(w, "  gignore [flags] <template>\n")
+		fmt.Fprint(w, "  gignore [flags] <template>\n")
 		fmt.Fprint(w, "\n")
 
 		fmt.Fprint(w, "Flags:\n")
 		flag.PrintDefaults()
 
 		fmt.Fprint(w, "\n")
-		fmt.Fprintf(w, "Example:\n")
+		fmt.Fprint(w, "Example:\n")
 		fmt.Fprint(w, "  gignore go\n")
 	}
 
@@ -59,17 +59,18 @@ func main() {
 	}
 
 	args := flag.Args()
-	if len(args) != 1 {
+	if len(args) == 0 {
 		flag.Usage()
 		return
 	}
 
-	err := client.Create(args[0])
-	if err != nil {
-		log.Fatalf("failed to create .gitignore file: %v", err)
+	for _, arg := range args {
+		err := client.Create(arg)
+		if err != nil {
+			log.Fatalf("failed to create .gitignore file: %v", err)
+		}
+		fmt.Printf("√ created %s .gitignore file\n", arg)
 	}
-
-	fmt.Printf("√ created %s .gitignore file\n", args[0])
 }
 
 func listTemplates(client *gignore.Client) error {
