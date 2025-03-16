@@ -35,19 +35,25 @@ tasks:
       - go fmt ./...
 
   generate:
-    desc: Generate the gitignore.io templates
+    desc: |
+      Generate the gitignore.io templates. This task will be skipped if the templates already exist.
+      You may use the `--force` flag to regenerate the templates.
     cmds:
       - go generate ./...
+    status:
+      - ls internal/registry/templates/gitignoreio/*.gitignore >/dev/null || exit 1
 
   build-windows:
     desc: Build the gignore project for Windows
     cmds:
       - GOOS=windows GOARCH=amd64 go build -o {{.WINDOWS}} -ldflags="-X main.Version={{.GIT_COMMIT}}" ./cmd/{{.PROGRAM}}
+    internal: true
 
   build-linux:
     desc: Build the gignore project for Linux
     cmds:
       - GOOS=linux GOARCH=amd64 go build -o {{.LINUX}} -ldflags="-X main.Version={{.GIT_COMMIT}}" ./cmd/{{.PROGRAM}}
+    internal: true
 
   test:
     desc: Run tests
