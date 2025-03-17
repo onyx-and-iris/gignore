@@ -36,7 +36,8 @@ tasks:
 
   generate:
     desc: |
-      Generate the gitignore.io templates. This task will be skipped if the templates already exist.
+      Generate the gitignore.io templates. 
+      This task will be skipped if the templates already exist.
       You may use the `--force` flag to regenerate the templates.
     cmds:
       - go generate ./...
