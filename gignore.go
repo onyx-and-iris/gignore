@@ -42,12 +42,10 @@ func (c *Client) Create(template string) error {
 		return err
 	}
 	if !ok {
-		templateNotFoundErr := &templateNotFoundError{template, c.registry}
+		templateNotFoundErr := &templateNotFoundError{template, []string{c.registry.Directory}}
 		if c.registry.Directory == "gitignoreio" {
 			return templateNotFoundErr
 		}
-
-		log.Errorf("%s. Checking default registry...", templateNotFoundErr)
 
 		c.registry.Directory = "gitignoreio"
 		ok, err = c.registry.Contains(template)
@@ -55,9 +53,12 @@ func (c *Client) Create(template string) error {
 			return err
 		}
 		if !ok {
+			templateNotFoundErr.templatesSearched = append(templateNotFoundErr.templatesSearched, c.registry.Directory)
 			return templateNotFoundErr
 		}
-		log.Infof("template '%s' found in default gitignoreio registry", template)
+		log.Debugf("template '%s' found in gitignoreio registry", template)
+	} else {
+		log.Debugf("template '%s' found in %s registry", template, c.registry.Directory)
 	}
 
 	content, err := c.registry.Get(template)

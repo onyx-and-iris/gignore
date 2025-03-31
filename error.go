@@ -1,17 +1,16 @@
-// Package gignore provides functionality for handling template errors and registry operations.
+// Package gignore provides a way to manage .gitignore files and templates.
 package gignore
 
 import (
 	"fmt"
-
-	"github.com/onyx-and-iris/gignore/internal/registry"
+	"strings"
 )
 
 type templateNotFoundError struct {
-	template string
-	registry *registry.TemplateRegistry
+	template          string
+	templatesSearched []string
 }
 
 func (e *templateNotFoundError) Error() string {
-	return fmt.Sprintf("template '%s' not found in %s registry", e.template, e.registry.Directory)
+	return fmt.Sprintf("template '%s' not found in %s registry", e.template, strings.Join(e.templatesSearched, ", "))
 }
