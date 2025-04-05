@@ -56,6 +56,28 @@ You may set an environment variable `GIGNORE_TEMPLATE_DIR` to avoid passing the 
 
 If a template is requested but not found in the custom directory then the gitignoreio registry will act as a fallback.
 
+## Logging
+
+The `-loglevel` flag allows you to control the verbosity of the application's logging output. 
+
+Acceptable values for this flag are:
+
+- `trace`
+- `debug`
+- `info`
+- `warn`
+- `error`
+- `fatal`
+- `panic`
+
+For example, to set the log level to `debug`, you can use:
+
+```
+vbantxt -s=streamname -log-level=debug "bus[0].eq.on=1 bus[1].gain=-12.8"
+```
+
+The default log level is `warn` if the flag is not specified.
+
 ## Special Thanks
 
 [gitignore.io][gitignoreio] For providing such a useful .gitignore service

@@ -5,11 +5,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"slices"
+	"os"
 
 	"github.com/onyx-and-iris/gignore"
 	log "github.com/sirupsen/logrus"
 )
+
+func exit(err error) {
+	_, _ = fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+	os.Exit(1)
+}
 
 func main() {
 	flag.Usage = func() {
@@ -30,7 +35,7 @@ func main() {
 	var (
 		list        bool
 		templateDir string
-		loglevel    int
+		loglevel    string
 	)
 
 	flag.BoolVar(&list, "list", false, "list available templates")
@@ -41,19 +46,22 @@ func main() {
 		getEnv("GIGNORE_TEMPLATE_DIR", "gitignoreio"),
 		"directory containing .gitignore templates",
 	)
-	flag.IntVar(&loglevel, "loglevel", int(log.WarnLevel), "log level")
-	flag.IntVar(&loglevel, "l", int(log.WarnLevel), "log level (shorthand)")
+	flag.StringVar(&loglevel, "loglevel", "warn", "log level")
+	flag.StringVar(&loglevel, "l", "warn", "log level (shorthand)")
+
 	flag.Parse()
 
-	if slices.Contains(log.AllLevels, log.Level(loglevel)) {
-		log.SetLevel(log.Level(loglevel))
+	level, err := log.ParseLevel(loglevel)
+	if err != nil {
+		exit(fmt.Errorf("invalid log level: %s", loglevel))
 	}
+	log.SetLevel(level)
 
 	client := gignore.New(gignore.WithTemplateDirectory(templateDir))
 
 	if list {
 		if err := listTemplates(client); err != nil {
-			log.Fatalf("failed to list templates: %v", err)
+			exit(fmt.Errorf("failed to list templates: %v", err))
 		}
 		return
 	}
@@ -67,7 +75,7 @@ func main() {
 	for _, arg := range args {
 		err := client.Create(arg)
 		if err != nil {
-			log.Fatalf("failed to create .gitignore file: %v", err)
+			exit(fmt.Errorf("failed to create .gitignore file: %v", err))
 		}
 		fmt.Printf("√ created %s .gitignore file\n", arg)
 	}
