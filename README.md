@@ -73,7 +73,7 @@ Acceptable values for this flag are:
 For example, to set the log level to `debug`, you can use:
 
 ```
-vbantxt -s=streamname -log-level=debug "bus[0].eq.on=1 bus[1].gain=-12.8"
+vbantxt -s=streamname -loglevel=debug "bus[0].eq.on=1 bus[1].gain=-12.8"
 ```
 
 The default log level is `warn` if the flag is not specified.
