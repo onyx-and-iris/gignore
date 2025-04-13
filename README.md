@@ -31,11 +31,11 @@ Available Commands:
   completion  Generate the autocompletion script for the specified shell
   create      Create a new .gitignore file
   help        Help about any command
-  list        List all .gitignore files in the current directory
+  list        List all .gitignore files in the root template repository
 
 Flags:
   -h, --help              help for gignore
-  -l, --loglevel string   Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
+  -l, --loglevel string   Log level (trace, debug, info, warn, error, fatal, panic) (default "warn")
   -r, --root string       Root directory to search for .gitignore files (default "gitignoreio")
 
 Use "gignore [command] --help" for more information about a command.
