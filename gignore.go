@@ -10,6 +10,9 @@ import (
 
 //go:generate go run cmd/gen/main.go
 
+// DefaultTemplateDirectory is the default directory for .gitignore templates.
+const DefaultTemplateDirectory = "gitignoreio"
+
 // Client is a client for managing .gitignore templates.
 type Client struct {
 	registry *registry.TemplateRegistry
@@ -43,11 +46,11 @@ func (c *Client) Create(template string) error {
 	}
 	if !ok {
 		templateNotFoundErr := &templateNotFoundError{template, []string{c.registry.Directory}}
-		if c.registry.Directory == "gitignoreio" {
+		if c.registry.Directory == DefaultTemplateDirectory {
 			return templateNotFoundErr
 		}
 
-		c.registry.Directory = "gitignoreio"
+		c.registry.Directory = DefaultTemplateDirectory
 		ok, err = c.registry.Contains(template)
 		if err != nil {
 			return err

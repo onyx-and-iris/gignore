@@ -1,93 +1,50 @@
-// Package main provides the entry point for the gignore command-line tool,
-// which generates .gitignore files based on specified templates.
+// Package main provides the entry point for the gignore CLI tool,
+// including commands like listing available .gitignore templates.
 package main
 
 import (
-	"flag"
-	"fmt"
-	"os"
-
 	"github.com/onyx-and-iris/gignore"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 )
 
-func exit(err error) {
-	_, _ = fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-	os.Exit(1)
+var client *gignore.Client
+
+var rootCmd = &cobra.Command{
+	Use:   "gignore",
+	Short: "A command line tool to manage .gitignore files",
+	Long: `gignore is a command line tool that helps you manage your .gitignore files.
+You can use it to list available templates and create new .gitignore files.
+It supports various programming languages.
+	Example:
+		gignore list
+		gignore create python`,
+	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
+		// Initialise the logger
+		loglevel, err := log.ParseLevel(cmd.Flag("loglevel").Value.String())
+		cobra.CheckErr(err)
+		log.SetLevel(loglevel)
+
+		// Initialise the gignore client
+		client = gignore.New(
+			gignore.WithTemplateDirectory(cmd.Flag("root").Value.String()),
+		)
+	},
+	Run: func(cmd *cobra.Command, _ []string) {
+		cmd.Help()
+	},
+}
+
+// init initialises the root command and adds global flags.
+func init() {
+	rootCmd.PersistentFlags().
+		StringP("root", "r", getEnv("GIGNORE_TEMPLATE_ROOT", gignore.DefaultTemplateDirectory), "Root directory to search for .gitignore files")
+	rootCmd.PersistentFlags().
+		StringP("loglevel", "l", getEnv("GIGNORE_LOGLEVEL", "warn"), "Log level (trace, debug, info, warn, error, fatal, panic)")
 }
 
 func main() {
-	flag.Usage = func() {
-		w := flag.CommandLine.Output()
-
-		fmt.Fprint(w, "Usage of gignore:\n")
-		fmt.Fprint(w, "  gignore [flags] <template>\n")
-		fmt.Fprint(w, "\n")
-
-		fmt.Fprint(w, "Flags:\n")
-		flag.PrintDefaults()
-
-		fmt.Fprint(w, "\n")
-		fmt.Fprint(w, "Example:\n")
-		fmt.Fprint(w, "  gignore go\n")
+	if err := rootCmd.Execute(); err != nil {
+		panic(err)
 	}
-
-	var (
-		list        bool
-		templateDir string
-		loglevel    string
-	)
-
-	flag.BoolVar(&list, "list", false, "list available templates")
-	flag.BoolVar(&list, "ls", false, "list available templates (shorthand)")
-	flag.StringVar(
-		&templateDir,
-		"dir",
-		getEnv("GIGNORE_TEMPLATE_DIR", "gitignoreio"),
-		"directory containing .gitignore templates",
-	)
-	flag.StringVar(&loglevel, "loglevel", "warn", "log level")
-	flag.StringVar(&loglevel, "l", "warn", "log level (shorthand)")
-
-	flag.Parse()
-
-	level, err := log.ParseLevel(loglevel)
-	if err != nil {
-		exit(fmt.Errorf("invalid log level: %s", loglevel))
-	}
-	log.SetLevel(level)
-
-	client := gignore.New(gignore.WithTemplateDirectory(templateDir))
-
-	if list {
-		if err := listTemplates(client); err != nil {
-			exit(fmt.Errorf("failed to list templates: %v", err))
-		}
-		return
-	}
-
-	args := flag.Args()
-	if len(args) == 0 {
-		flag.Usage()
-		return
-	}
-
-	for _, arg := range args {
-		err := client.Create(arg)
-		if err != nil {
-			exit(fmt.Errorf("failed to create .gitignore file: %v", err))
-		}
-		fmt.Printf("√ created %s .gitignore file\n", arg)
-	}
-}
-
-func listTemplates(client *gignore.Client) error {
-	templates, err := client.List()
-	if err != nil {
-		return err
-	}
-	for _, template := range templates {
-		fmt.Println(template)
-	}
-	return nil
 }
