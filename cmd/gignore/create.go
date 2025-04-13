@@ -24,7 +24,8 @@ Example:
 		}
 
 		for _, arg := range args {
-			createTemplate(arg)
+			err := createTemplate(arg)
+			cobra.CheckErr(err)
 		}
 	},
 }
@@ -35,9 +36,12 @@ func init() {
 }
 
 // createTemplate creates a new .gitignore file using the specified template.
-func createTemplate(template string) {
+func createTemplate(template string) error {
 	err := client.Create(template)
-	cobra.CheckErr(err)
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("√ created %s .gitignore file\n", template)
+	return nil
 }

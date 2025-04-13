@@ -39,22 +39,22 @@ It supports various programming languages.
 
 // init initialises the root command and adds global flags.
 func init() {
+	getEnv := func(key, defaultValue string) string {
+		value := os.Getenv(key)
+		if value == "" {
+			return defaultValue
+		}
+		return value
+	}
+
 	rootCmd.PersistentFlags().
 		StringP("root", "r", getEnv("GIGNORE_TEMPLATE_ROOT", gignore.DefaultTemplateDirectory), "Root directory to search for .gitignore files")
 	rootCmd.PersistentFlags().
 		StringP("loglevel", "l", getEnv("GIGNORE_LOGLEVEL", "warn"), "Log level (trace, debug, info, warn, error, fatal, panic)")
 }
 
-func getEnv(key, defaultValue string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
