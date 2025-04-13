@@ -38,5 +38,6 @@ func init() {
 func createTemplate(template string) {
 	err := client.Create(template)
 	cobra.CheckErr(err)
+
 	fmt.Printf("√ created %s .gitignore file\n", template)
 }

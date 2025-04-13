@@ -19,9 +19,8 @@ You can use this command to quickly find all available .gitignore templates.
 Example:
   gignore --root=<path> list`,
 	Run: func(_ *cobra.Command, _ []string) {
-		if err := listTemplates(); err != nil {
-			cobra.CheckErr(err)
-		}
+		err := listTemplates()
+		cobra.CheckErr(err)
 	},
 }
 
@@ -37,10 +36,12 @@ func listTemplates() error {
 	if err != nil {
 		return err
 	}
+
 	var output strings.Builder
 	for _, template := range templates {
 		output.WriteString(template + "\n")
 	}
 	fmt.Print(output.String())
+
 	return nil
 }

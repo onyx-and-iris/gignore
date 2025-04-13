@@ -3,6 +3,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/onyx-and-iris/gignore"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -41,6 +43,14 @@ func init() {
 		StringP("root", "r", getEnv("GIGNORE_TEMPLATE_ROOT", gignore.DefaultTemplateDirectory), "Root directory to search for .gitignore files")
 	rootCmd.PersistentFlags().
 		StringP("loglevel", "l", getEnv("GIGNORE_LOGLEVEL", "warn"), "Log level (trace, debug, info, warn, error, fatal, panic)")
+}
+
+func getEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return defaultValue
+	}
+	return value
 }
 
 func main() {
