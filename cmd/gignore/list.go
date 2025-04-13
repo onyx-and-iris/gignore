@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/onyx-and-iris/gignore"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +19,7 @@ You can use this command to quickly find all available .gitignore templates.
 Example:
   gignore --root=<path> list`,
 	Run: func(_ *cobra.Command, _ []string) {
-		if err := listTemplates(client); err != nil {
+		if err := listTemplates(); err != nil {
 			cobra.CheckErr(err)
 		}
 	},
@@ -33,7 +32,7 @@ func init() {
 
 // listTemplates retrieves and prints all .gitignore templates available from the gignore client.
 // It takes a gignore.Client as a parameter and returns an error if the operation fails.
-func listTemplates(client *gignore.Client) error {
+func listTemplates() error {
 	templates, err := client.List()
 	if err != nil {
 		return err

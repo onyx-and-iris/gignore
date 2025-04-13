@@ -5,7 +5,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/onyx-and-iris/gignore"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ Example:
 		}
 
 		for _, arg := range args {
-			createTemplate(client, arg)
+			createTemplate(arg)
 		}
 	},
 }
@@ -36,7 +35,7 @@ func init() {
 }
 
 // createTemplate creates a new .gitignore file using the specified template.
-func createTemplate(client *gignore.Client, template string) {
+func createTemplate(template string) {
 	err := client.Create(template)
 	cobra.CheckErr(err)
 	fmt.Printf("√ created %s .gitignore file\n", template)
