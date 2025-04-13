@@ -42,7 +42,7 @@ tasks:
     cmds:
       - go generate ./...
     status:
-      - ls internal/registry/templates/gitignoreio/*.gitignore >/dev/null || exit 1
+      - ls internal/registry/templates/gitignoreio/*.gitignore >/dev/null
 
   build-windows:
     desc: Build the gignore project for Windows

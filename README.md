@@ -3,7 +3,7 @@
 ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
 
 
-# Gignore - Generate .gitinore files
+# Gignore - Generate .gitignore files
 
 ## Install
 
@@ -23,23 +23,28 @@ task install
 ## Usage
 
 ```bash
-Usage of gignore:
-  gignore [flags] <template>
+Usage:
+  gignore [flags]
+  gignore [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  create      Create a new .gitignore file
+  help        Help about any command
+  list        List all .gitignore files in the current directory
 
 Flags:
-  -dir string
-        directory containing .gitignore templates (default "gitignoreio")
-  -l int
-        log level (shorthand) (default 3)
-  -list
-        list available templates
-  -loglevel int
-        log level (default 3)
-  -ls
-        list available templates (shorthand)
+  -h, --help              help for gignore
+  -l, --loglevel string   Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
+  -r, --root string       Root directory to search for .gitignore files (default "gitignoreio")
 
-Example:
-  gignore go
+Use "gignore [command] --help" for more information about a command.
+```
+
+For example:
+
+```bash
+gignore create go
 ```
 
 ## Custom Templates
@@ -49,10 +54,10 @@ It's possible to add your own custom templates, simply create a directory in `in
 Then pass the dir name as a flag, for example:
 
 ```bash
-gignore -dir=custom go
+gignore -root=custom create go
 ```
 
-You may set an environment variable `GIGNORE_TEMPLATE_DIR` to avoid passing the `-dir` flag each time.
+You may set an environment variable `GIGNORE_TEMPLATE_ROOT` to avoid passing the `-root` flag each time.
 
 If a template is requested but not found in the custom directory then the gitignoreio registry will act as a fallback.
 
@@ -73,7 +78,7 @@ Acceptable values for this flag are:
 For example, to set the log level to `debug`, you can use:
 
 ```bash
-gignore -loglevel=debug -dir=custom go
+gignore -loglevel=debug create python
 ```
 
 The default log level is `warn` if the flag is not specified.

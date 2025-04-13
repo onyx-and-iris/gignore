@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.5.0] - 2025-04-13
+
+### Changed
+
+-   CLI component migrated to Cobra. This introduces the following changes:
+    -   `list` is now a subcommand.
+    -   `create` has been added as a subcommand, use it to create a new .gitignore file.
+-   Env var `GIGNORE_TEMPLATE_DIR` changed to `GIGNORE_TEMPLATE_ROOT`
+-   Env var `GIGNORE_LOGLEVEL` may now be used to set the logging level.
+
 # [0.4.0] - 2025-04-05
 
 ### Changed
