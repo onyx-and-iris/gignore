@@ -30,7 +30,6 @@ func init() {
 }
 
 // listTemplates retrieves and prints all .gitignore templates available from the gignore client.
-// It takes a gignore.Client as a parameter and returns an error if the operation fails.
 func listTemplates() error {
 	templates, err := client.List()
 	if err != nil {
