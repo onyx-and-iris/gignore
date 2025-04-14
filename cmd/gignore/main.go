@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"os"
 
 	"github.com/onyx-and-iris/gignore"
@@ -10,8 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var client *gignore.Client
-
+// rootCmd is the root command for the gignore CLI tool.
 var rootCmd = &cobra.Command{
 	Use:   "gignore",
 	Short: "A command line tool to manage .gitignore files",
@@ -28,9 +28,14 @@ It supports various programming languages.
 		log.SetLevel(loglevel)
 
 		// Initialise the gignore client
-		client = gignore.New(
+		client := gignore.New(
 			gignore.WithTemplateDirectory(cmd.Flag("root").Value.String()),
 		)
+
+		// Set the client in the context
+		// This allows us to access the client in the command handlers
+		ctx := context.WithValue(context.Background(), clientKey, client)
+		cmd.SetContext(ctx)
 	},
 	Run: func(cmd *cobra.Command, _ []string) {
 		cmd.Help()

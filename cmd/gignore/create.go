@@ -3,11 +3,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
+// createCmd is the command to create a new .gitignore file.
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new .gitignore file",
@@ -24,7 +26,7 @@ Example:
 		}
 
 		for _, arg := range args {
-			err := createTemplate(arg)
+			err := createTemplate(cmd.Context(), arg)
 			cobra.CheckErr(err)
 		}
 	},
@@ -36,7 +38,8 @@ func init() {
 }
 
 // createTemplate creates a new .gitignore file using the specified template.
-func createTemplate(template string) error {
+func createTemplate(ctx context.Context, template string) error {
+	client := getClientFromContext(ctx)
 	err := client.Create(template)
 	if err != nil {
 		return err
