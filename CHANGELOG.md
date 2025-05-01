@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.6.0] - 2025-05-01
+
+### Added
+
+-   list now accepts pattern arguments, for example `gignore list python` to filter out python templates.
+-   `--config`  flag added to the root command for setting the config path (if required).
+-   tests for list/create commands added
+
+### Changed
+
+-   Viper now used for configuration management. This changes the following:
+    -   env var `GIGNORE_TEMPLATE_ROOT` is now `GIGNORE_ROOT`.
+    -   configuration may be loaded from a config.yaml (default path $HOME/.config/gignore/config.yaml)
+
 # [0.5.0] - 2025-04-13
 
 ### Changed
