@@ -5,6 +5,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -16,13 +18,20 @@ var listCmd = &cobra.Command{
 	Short: "List all .gitignore files in the root template repository",
 	Long: `List all .gitignore files in the root template repository.
 This command will search the root template repository for .gitignore files and print their paths to the console.
-The root template repository can be specified using the --root flag.
-You can use this command to quickly find all available .gitignore templates.
+You can also provide a pattern to filter the results.
 Example:
-  gignore --root=<path> list`,
-	Run: func(cmd *cobra.Command, _ []string) {
-		err := listTemplates(cmd.Context())
-		cobra.CheckErr(err)
+	gignore list
+	gignore list python`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		patterns := args
+		if len(patterns) == 0 {
+			patterns = []string{""}
+		}
+		err := listTemplates(cmd.Context(), os.Stdout, patterns...)
+		if err != nil {
+			return fmt.Errorf("failed to list templates: %w", err)
+		}
+		return nil
 	},
 }
 
@@ -32,18 +41,23 @@ func init() {
 }
 
 // listTemplates retrieves and prints all .gitignore templates available from the gignore client.
-func listTemplates(ctx context.Context) error {
+func listTemplates(ctx context.Context, out io.Writer, patterns ...string) error {
 	client := getClientFromContext(ctx)
-	templates, err := client.List()
+	templates, err := client.List(patterns...)
 	if err != nil {
 		return err
+	}
+
+	if len(templates) == 0 {
+		fmt.Println("No templates found.")
+		return nil
 	}
 
 	var output strings.Builder
 	for _, template := range templates {
 		output.WriteString(template + "\n")
 	}
-	fmt.Print(output.String())
+	fmt.Fprint(out, output.String())
 
 	return nil
 }

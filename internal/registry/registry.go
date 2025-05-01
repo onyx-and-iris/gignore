@@ -6,6 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
+	"strings"
+
+	"github.com/charmbracelet/log"
 )
 
 //go:embed templates
@@ -51,18 +54,26 @@ func (t *TemplateRegistry) Get(name string) ([]byte, error) {
 }
 
 // List lists all the gitignore templates in the registry.
-func (t *TemplateRegistry) List() ([]string, error) {
+func (t *TemplateRegistry) List(root, substring string) ([]string, error) {
 	var paths []string
 
+	rootPath := fmt.Sprintf("templates/%s", root)
+	log.Debugf("Finding templates containing substring '%s' in %s...", substring, rootPath)
 	err := fs.WalkDir(
 		t.templates,
-		fmt.Sprintf("templates/%s", t.Directory),
+		rootPath,
 		func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
 
 			if !d.IsDir() {
+				if substring != "" {
+					if strings.Contains(d.Name(), substring) {
+						paths = append(paths, path)
+					}
+					return nil
+				}
 				paths = append(paths, path)
 			}
 

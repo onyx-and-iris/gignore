@@ -3,9 +3,9 @@ package gignore
 import (
 	"io"
 
+	"github.com/charmbracelet/log"
 	"github.com/onyx-and-iris/gignore/internal/filewriter"
 	"github.com/onyx-and-iris/gignore/internal/registry"
-	log "github.com/sirupsen/logrus"
 )
 
 //go:generate go run cmd/gen/main.go
@@ -16,7 +16,7 @@ const DefaultTemplateDirectory = "gitignoreio"
 // Client is a client for managing .gitignore templates.
 type Client struct {
 	registry *registry.TemplateRegistry
-	writer   io.Writer
+	Writer   io.Writer
 }
 
 // New creates a new Client with the provided options.
@@ -34,8 +34,24 @@ func New(options ...Option) *Client {
 }
 
 // List returns a list of available .gitignore templates.
-func (c *Client) List() ([]string, error) {
-	return c.registry.List()
+func (c *Client) List(patterns ...string) ([]string, error) {
+	var paths []string
+	for _, pattern := range patterns {
+		p, err := c.registry.List(c.registry.Directory, pattern)
+		if err != nil {
+			return nil, err
+		}
+		paths = append(paths, p...)
+
+		if c.registry.Directory != DefaultTemplateDirectory {
+			p, err = c.registry.List(DefaultTemplateDirectory, pattern)
+			if err != nil {
+				return nil, err
+			}
+			paths = append(paths, p...)
+		}
+	}
+	return paths, nil
 }
 
 // Create generates a .gitignore file from the specified template.
@@ -69,7 +85,7 @@ func (c *Client) Create(template string) error {
 		return err
 	}
 
-	_, err = c.writer.Write(content)
+	_, err = c.Writer.Write(content)
 	if err != nil {
 		return err
 	}
