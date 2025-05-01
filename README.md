@@ -5,6 +5,8 @@
 
 # Gignore - Generate .gitignore files
 
+For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
+
 ## Install
 
 With Go tools:
