@@ -5,8 +5,8 @@ package main
 import (
 	"context"
 
+	"github.com/charmbracelet/log"
 	"github.com/onyx-and-iris/gignore"
-	log "github.com/sirupsen/logrus"
 )
 
 type contextKey string
