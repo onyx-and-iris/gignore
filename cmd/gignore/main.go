@@ -5,10 +5,13 @@ package main
 import (
 	"context"
 	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/charmbracelet/log"
 	"github.com/onyx-and-iris/gignore"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // rootCmd is the root command for the gignore CLI tool.
@@ -18,18 +21,18 @@ var rootCmd = &cobra.Command{
 	Long: `gignore is a command line tool that helps you manage your .gitignore files.
 You can use it to list available templates and create new .gitignore files.
 It supports various programming languages.
-	Example:
-		gignore list
-		gignore create python`,
+Example:
+	gignore list
+	gignore create python`,
 	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 		// Initialise the logger
-		loglevel, err := log.ParseLevel(cmd.Flag("loglevel").Value.String())
+		level, err := log.ParseLevel(viper.GetString("loglevel"))
 		cobra.CheckErr(err)
-		log.SetLevel(loglevel)
+		log.SetLevel(level)
 
 		// Initialise the gignore client
 		client := gignore.New(
-			gignore.WithTemplateDirectory(cmd.Flag("root").Value.String()),
+			gignore.WithTemplateDirectory(viper.GetString("root")),
 		)
 
 		// Set the client in the context
@@ -42,20 +45,52 @@ It supports various programming languages.
 	},
 }
 
+var cfgFile string
+
 // init initialises the root command and adds global flags.
 func init() {
-	getEnv := func(key, defaultValue string) string {
-		value := os.Getenv(key)
-		if value == "" {
-			return defaultValue
-		}
-		return value
-	}
+	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().
-		StringP("root", "r", getEnv("GIGNORE_TEMPLATE_ROOT", gignore.DefaultTemplateDirectory), "Root directory to search for .gitignore files")
+		StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.config/gignore/config.yaml)")
 	rootCmd.PersistentFlags().
-		StringP("loglevel", "l", getEnv("GIGNORE_LOGLEVEL", "warn"), "Log level (trace, debug, info, warn, error, fatal, panic)")
+		StringP("root", "r", gignore.DefaultTemplateDirectory, "Root directory to search for .gitignore files")
+	rootCmd.PersistentFlags().
+		StringP("loglevel", "l", "warn", "Log level (trace, debug, info, warn, error, fatal, panic)")
+
+	replacer := strings.NewReplacer("-", "_")
+	viper.SetEnvKeyReplacer(replacer)
+	viper.SetEnvPrefix("GIGNORE")
+	viper.BindPFlag("root", rootCmd.PersistentFlags().Lookup("root"))
+	viper.BindPFlag("loglevel", rootCmd.PersistentFlags().Lookup("loglevel"))
+}
+
+// initConfig reads in config file and ENV variables if set.
+// It first checks if a config file is provided via the --config flag.
+// If not, it looks for a config file in the user's config directory.
+// The config file is expected to be in YAML format and named "config.yaml".
+func initConfig() {
+	if cfgFile != "" {
+		viper.SetConfigFile(cfgFile)
+	} else {
+		configDir, err := os.UserConfigDir()
+		cobra.CheckErr(err)
+
+		viper.AddConfigPath(filepath.Join(configDir, "gignore"))
+		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		// If the config file is not found, we ignore the error
+		// as it is not mandatory to have a config file.
+		// However, if there is any other error, we log it and exit.
+		// This includes errors like invalid syntax in the config file.
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			log.Fatal("Error reading config file: ", err)
+		}
+	}
+	viper.AutomaticEnv()
 }
 
 func main() {

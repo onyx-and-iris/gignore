@@ -34,6 +34,7 @@ Available Commands:
   list        List all .gitignore files in the root template repository
 
 Flags:
+  -c, --config string     config file (default is $HOME/.config/gignore/config.yaml)
   -h, --help              help for gignore
   -l, --loglevel string   Log level (trace, debug, info, warn, error, fatal, panic) (default "warn")
   -r, --root string       Root directory to search for .gitignore files (default "gitignoreio")
@@ -51,19 +52,19 @@ gignore create go
 
 It's possible to add your own custom templates, simply create a directory in `internal/registry/templates`. You'll need to [reinstall](https://github.com/onyx-and-iris/gignore?tab=readme-ov-file#install) the project before you can load the new templates.
 
-Then pass the dir name as a flag, for example:
+Then pass the new template root with the `--root` flag, for example:
 
 ```bash
-gignore -root=custom create go
+gignore --root=custom create go
 ```
 
-You may set an environment variable `GIGNORE_TEMPLATE_ROOT` to avoid passing the `-root` flag each time.
+You may set an environment variable `GIGNORE_ROOT` to avoid passing the `--root` flag each time.
 
 If a template is requested but not found in the custom directory then the gitignoreio registry will act as a fallback.
 
 ## Logging
 
-The `-loglevel` flag allows you to control the verbosity of the application's logging output. 
+The `--loglevel` flag allows you to control the verbosity of the application's logging output. 
 
 Acceptable values for this flag are:
 
@@ -78,7 +79,7 @@ Acceptable values for this flag are:
 For example, to set the log level to `debug`, you can use:
 
 ```bash
-gignore -loglevel=debug create python
+gignore --loglevel=debug create python
 ```
 
 The default log level is `warn` if the flag is not specified.
