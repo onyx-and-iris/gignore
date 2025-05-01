@@ -31,12 +31,12 @@ func (m mockFileWriter) Write(content []byte) (int, error) {
 }
 
 func TestCreateSuccess(t *testing.T) {
+	var templateBuffer bytes.Buffer
 	client := gignore.New(
 		gignore.WithTemplateDirectory(gignore.DefaultTemplateDirectory),
+		gignore.WithFileWriter(mockFileWriter{out: &templateBuffer}),
 	)
 	ctx := context.WithValue(context.Background(), clientKey, client)
-	var templateBuffer bytes.Buffer
-	client.Writer = mockFileWriter{out: &templateBuffer}
 
 	var outBuffer bytes.Buffer
 	err := createTemplate(ctx, &outBuffer, "go")

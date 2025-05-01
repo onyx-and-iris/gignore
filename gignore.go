@@ -16,7 +16,7 @@ const DefaultTemplateDirectory = "gitignoreio"
 // Client is a client for managing .gitignore templates.
 type Client struct {
 	registry *registry.TemplateRegistry
-	Writer   io.Writer
+	writer   io.Writer
 }
 
 // New creates a new Client with the provided options.
@@ -85,7 +85,7 @@ func (c *Client) Create(template string) error {
 		return err
 	}
 
-	_, err = c.Writer.Write(content)
+	_, err = c.writer.Write(content)
 	if err != nil {
 		return err
 	}
